@@ -1,0 +1,7 @@
+name: org-meta-bundle
+version: 0.1.0
+description: Organization-wide Codex workflows for APM and cached documentation.
+author: personal-leverage
+targets:
+  - codex
+includes: auto

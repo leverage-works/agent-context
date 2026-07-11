@@ -1,0 +1,25 @@
+name: agent-context
+version: 0.1.0
+description: Codex-first APM packages for personal-leverage.
+author: personal-leverage
+targets:
+  - codex
+devDependencies:
+  apm:
+    - path: ./packages/org-meta-bundle
+scripts:
+  hydrate-cached-docs: uv run .agents/skills/use-cached-docs/scripts/hydrate_cached_docs.py
+
+marketplace:
+  owner:
+    name: personal-leverage
+    url: https://github.com/personal-leverage
+  outputs:
+    codex: {}
+  versioning:
+    strategy: lockstep
+  packages:
+    - name: org-meta-bundle
+      source: ./packages/org-meta-bundle
+      version: 0.1.0
+      category: Productivity
