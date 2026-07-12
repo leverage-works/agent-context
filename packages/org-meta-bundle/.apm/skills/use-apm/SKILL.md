@@ -22,6 +22,34 @@ apm install --target codex
 
 Codex receives skills under `.agents/skills/`. It receives agents under `.codex/agents/` and compiled instructions through `AGENTS.md`; edit package source instead of those generated files.
 
+## Workspace-Local Packages
+
+Use a local package when its workflows, terminology, or tools only make sense
+in one repository. Keep reusable organization-wide workflows in a package from
+the organization marketplace instead.
+
+For example, `second-brain` can keep its context-specific package inside that
+repository and declare it as a local development dependency in its root
+`apm.yml`:
+
+```yaml
+devDependencies:
+  apm:
+    - path: ./local-apm-packages/second-brain-workflows
+```
+
+The local package needs its own `apm.yml` and `.apm/` source tree. Install it
+from the workspace root after adding or changing the dependency:
+
+```sh
+apm install --target codex --dry-run
+apm install --target codex
+```
+
+Use relative paths so a clone works for every contributor. A local package is
+versioned with the repository that owns it and should be promoted into this
+organization package repository only when it has a clear cross-repository use.
+
 ## Marketplace Workflow
 
 Validate package versions before building the marketplace artifact:
