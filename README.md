@@ -33,17 +33,15 @@ organization workflows.
    apm init --yes --target codex
    ```
 
-3. Register this repository as an APM marketplace, then install the
-   organization bundle:
+3. Install the organization bundle directly from this repository:
 
    ```sh
-   apm marketplace add personal-leverage/agent-context
-   apm install org-meta-bundle@agent-context --target codex
+   apm install personal-leverage/agent-context/packages/org-meta-bundle --target codex
    ```
 
    This writes the bundle to `.agents/skills/` in the workspace and records it
-   in `apm.yml` and `apm.lock.yaml`. The marketplace publisher must commit the
-   generated `.claude-plugin/marketplace.json` before consumers can register it.
+   in `apm.yml` and `apm.lock.yaml`. No marketplace registration or manual
+   manifest editing is required.
 
 4. Reload the Codex agent or start a new Codex session in the workspace. Codex
    reads the installed skills and generated instructions when the session starts.

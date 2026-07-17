@@ -51,6 +51,26 @@ list size is insufficient.
 6. When communicating in another repository, use `collaborate-cross-repos`.
    Keep all GitHub identity conventions from that skill.
 
+## Commit Linkage
+
+When suggesting a commit message for work that addresses an issue, always
+reference that issue. If the commit fully solves it, use GitHub's closing
+keyword syntax so merging the commit into the default branch closes the issue:
+
+```text
+Fix parser fallback (Fixes #42)
+```
+
+For an issue in another repository, use its full repository reference:
+
+```text
+Fix shared parser fallback (Fixes owner/repository#42)
+```
+
+Use a closing keyword only when the commit resolves the issue; otherwise use a
+plain reference such as `(#42)`. Supported closing keywords include `close`,
+`fix`, and `resolve` (and their common inflections).
+
 ## Requirements and Boundaries
 
 - The checkout must have an `origin` remote pointing to GitHub.
