@@ -37,13 +37,13 @@ organization workflows.
    organization bundle:
 
    ```sh
-   apm marketplace add https://raw.githubusercontent.com/personal-leverage/agent-context/main/.agents/plugins/marketplace.json --name agent-context
+   apm marketplace add personal-leverage/agent-context
    apm install org-meta-bundle@agent-context --target codex
    ```
 
    This writes the bundle to `.agents/skills/` in the workspace and records it
    in `apm.yml` and `apm.lock.yaml`. The marketplace publisher must commit the
-   generated `.agents/plugins/marketplace.json` before consumers can register it.
+   generated `.claude-plugin/marketplace.json` before consumers can register it.
 
 4. Reload the Codex agent or start a new Codex session in the workspace. Codex
    reads the installed skills and generated instructions when the session starts.
