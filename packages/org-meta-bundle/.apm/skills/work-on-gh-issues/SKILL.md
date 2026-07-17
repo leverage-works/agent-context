@@ -19,7 +19,10 @@ uv run .agents/skills/work-on-gh-issues/scripts/list_issues.py
 
 The helper resolves the current checkout's `origin` remote, queries its open
 GitHub issues, and prints a table with each issue's number, title, author,
-opened date, labels, and URL.
+opened date, labels, and URL. Issues carrying the
+`renovate-dependency-dashboard` label are excluded because Renovate uses that
+label for its bot-managed **Dependency Dashboard**, rather than actionable
+project work.
 
 To inspect one exact issue, pass its number either positionally or by option:
 
