@@ -1,9 +1,11 @@
 cached_docs:
-  - id: microsoft-apm
+  - id: apm
     strategy:
       type: github-release-http
       repository: microsoft/apm
       version: latest
+    files:
+      - source: README.md
     folders:
       - source: docs
         destination: docs
