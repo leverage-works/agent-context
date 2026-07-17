@@ -31,13 +31,16 @@ import yaml
 USER_AGENT = "agent-context-hydrate-cached-docs"
 SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
 IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
+COMMIT_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 
 
 @dataclass(frozen=True)
 class CachedDocsSource:
     identifier: str
     repository: str
+    strategy_type: str
     version: str
+    files: tuple[tuple[PurePosixPath, PurePosixPath], ...]
     folders: tuple[tuple[PurePosixPath, PurePosixPath], ...]
     configuration_path: Path
 
@@ -97,6 +100,32 @@ def relative_folder(value: object, label: str) -> PurePosixPath:
     return path
 
 
+def configured_paths(
+    entry: Mapping[object, object],
+    label: str,
+    key: str,
+) -> tuple[tuple[PurePosixPath, PurePosixPath], ...]:
+    configured = entry.get(key, [])
+    if not isinstance(configured, list):
+        raise ValueError(f"{label}.{key} must be a list")
+
+    paths: list[tuple[PurePosixPath, PurePosixPath]] = []
+    destinations: set[PurePosixPath] = set()
+    for index, path in enumerate(configured, start=1):
+        if not isinstance(path, Mapping):
+            raise ValueError(f"{label}.{key}[{index}] must be a mapping")
+        source = relative_folder(path.get("source"), f"{label}.{key}[{index}].source")
+        destination = relative_folder(
+            path.get("destination", source.as_posix()),
+            f"{label}.{key}[{index}].destination",
+        )
+        if destination in destinations:
+            raise ValueError(f"{label}.{key} has duplicate destination {destination}")
+        destinations.add(destination)
+        paths.append((source, destination))
+    return tuple(paths)
+
+
 def load_sources(configuration_path: Path) -> list[CachedDocsSource]:
     with configuration_path.open() as configuration_file:
         configuration = yaml.safe_load(configuration_file)
@@ -115,31 +144,29 @@ def load_sources(configuration_path: Path) -> list[CachedDocsSource]:
         strategy = entry.get("strategy")
         if not isinstance(strategy, Mapping):
             raise ValueError(f"{configuration_path}: cached_docs entry {identifier}.strategy must be a mapping")
-        if strategy.get("type") != "github-release-http":
-            raise ValueError(f"{configuration_path}: cached_docs entry {identifier} must use github-release-http")
+        strategy_type = required_string(strategy.get("type"), f"{configuration_path}: {identifier}.strategy.type")
+        if strategy_type not in {"github-release-http", "github-archive-http"}:
+            raise ValueError(
+                f"{configuration_path}: cached_docs entry {identifier} must use github-release-http or github-archive-http"
+            )
 
         repository = required_string(strategy.get("repository"), f"{configuration_path}: {identifier}.repository")
-        version = required_string(strategy.get("version"), f"{configuration_path}: {identifier}.version")
-        configured_folders = entry.get("folders")
-        if not isinstance(configured_folders, list) or not configured_folders:
-            raise ValueError(f"{configuration_path}: {identifier}.folders must be a non-empty list")
+        version_key = "version" if strategy_type == "github-release-http" else "ref"
+        version = required_string(strategy.get(version_key), f"{configuration_path}: {identifier}.{version_key}")
+        if strategy_type == "github-archive-http" and not COMMIT_PATTERN.fullmatch(version):
+            raise ValueError(f"{configuration_path}: {identifier}.ref must be a 40-character lowercase commit SHA")
 
-        folders: list[tuple[PurePosixPath, PurePosixPath]] = []
-        destinations: set[PurePosixPath] = set()
-        for folder_index, folder in enumerate(configured_folders, start=1):
-            if not isinstance(folder, Mapping):
-                raise ValueError(f"{configuration_path}: {identifier}.folders[{folder_index}] must be a mapping")
-            source = relative_folder(folder.get("source"), f"{configuration_path}: {identifier}.folders[{folder_index}].source")
-            destination = relative_folder(
-                folder.get("destination", source.as_posix()),
-                f"{configuration_path}: {identifier}.folders[{folder_index}].destination",
-            )
-            if destination in destinations:
-                raise ValueError(f"{configuration_path}: {identifier} has duplicate destination {destination}")
-            destinations.add(destination)
-            folders.append((source, destination))
+        files = configured_paths(entry, f"{configuration_path}: {identifier}", "files")
+        folders = configured_paths(entry, f"{configuration_path}: {identifier}", "folders")
+        if not files and not folders:
+            raise ValueError(f"{configuration_path}: {identifier} must define at least one file or folder")
+        destinations = [destination for _source, destination in (*files, *folders)]
+        if len(destinations) != len(set(destinations)):
+            raise ValueError(f"{configuration_path}: {identifier} has duplicate file or folder destinations")
 
-        sources.append(CachedDocsSource(identifier, repository, version, tuple(folders), configuration_path))
+        sources.append(
+            CachedDocsSource(identifier, repository, strategy_type, version, files, folders, configuration_path)
+        )
     return sources
 
 
@@ -167,12 +194,20 @@ def discover_sources(workspace_root: Path) -> list[CachedDocsSource]:
     return list(sources_by_id.values())
 
 
+def source_archive(source: CachedDocsSource) -> tuple[str, str]:
+    if source.strategy_type == "github-release-http":
+        return release_source(source.repository, source.version)
+    return source.version, f"https://api.github.com/repos/{source.repository}/tarball/{source.version}"
+
+
 def extract_folders(
     archive: bytes,
     destination: Path,
+    files: tuple[tuple[PurePosixPath, PurePosixPath], ...],
     folders: tuple[tuple[PurePosixPath, PurePosixPath], ...],
-) -> dict[PurePosixPath, int]:
-    files_written = {source: 0 for source, _ in folders}
+) -> tuple[dict[PurePosixPath, int], dict[PurePosixPath, int]]:
+    files_written = {source: 0 for source, _ in files}
+    folders_written = {source: 0 for source, _ in folders}
     with tarfile.open(fileobj=io.BytesIO(archive), mode="r:gz") as tar:
         for member in tar:
             if not member.isfile():
@@ -180,28 +215,43 @@ def extract_folders(
 
             archive_path = PurePosixPath(member.name)
             relative_path = archive_path.parts[1:]
-            for source_folder, destination_folder in folders:
-                source_parts = source_folder.parts
-                if relative_path[: len(source_parts)] != source_parts:
+            if not relative_path:
+                continue
+            archive_relative = PurePosixPath(*relative_path)
+            for source_file, destination_file in files:
+                if archive_relative != source_file:
                     continue
-                remaining_path = relative_path[len(source_parts) :]
-                if not remaining_path:
-                    continue
-
-                target = destination / Path(*destination_folder.parts, *remaining_path)
+                target = destination / Path(*destination_file.parts)
                 target.parent.mkdir(parents=True, exist_ok=True)
                 archive_file = tar.extractfile(member)
                 if archive_file is None:
                     raise RuntimeError(f"Could not extract {member.name}")
                 with archive_file, target.open("wb") as output:
                     shutil.copyfileobj(archive_file, output)
-                files_written[source_folder] += 1
+                files_written[source_file] += 1
                 break
-    return files_written
+            else:
+                for source_folder, destination_folder in folders:
+                    source_parts = source_folder.parts
+                    if relative_path[: len(source_parts)] != source_parts:
+                        continue
+                    remaining_path = relative_path[len(source_parts) :]
+                    if not remaining_path:
+                        continue
+                    target = destination / Path(*destination_folder.parts, *remaining_path)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    archive_file = tar.extractfile(member)
+                    if archive_file is None:
+                        raise RuntimeError(f"Could not extract {member.name}")
+                    with archive_file, target.open("wb") as output:
+                        shutil.copyfileobj(archive_file, output)
+                    folders_written[source_folder] += 1
+                    break
+    return files_written, folders_written
 
 
 def hydrate(source: CachedDocsSource, cache_root: Path, dry_run: bool) -> None:
-    tag, source_url = release_source(source.repository, source.version)
+    tag, source_url = source_archive(source)
     destination = cache_root / "tool-docs" / source.identifier / tag
     if dry_run:
         print(f"Would hydrate {source.repository} {tag} into {destination}")
@@ -211,17 +261,25 @@ def hydrate(source: CachedDocsSource, cache_root: Path, dry_run: bool) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=destination.parent, prefix=f".{source.identifier}-{tag}-") as temporary_dir:
         temporary_destination = Path(temporary_dir)
-        files_written = extract_folders(archive, temporary_destination, source.folders)
-        missing_folders = [folder for folder, count in files_written.items() if not count]
-        if missing_folders:
-            missing = ", ".join(folder.as_posix() for folder in missing_folders)
-            raise RuntimeError(f"{source.repository} {tag} did not contain configured folders: {missing}")
+        files_written, folders_written = extract_folders(
+            archive, temporary_destination, source.files, source.folders
+        )
+        missing_files = [file for file, count in files_written.items() if not count]
+        missing_folders = [folder for folder, count in folders_written.items() if not count]
+        if missing_files or missing_folders:
+            missing = ", ".join(
+                [*(file.as_posix() for file in missing_files), *(folder.as_posix() for folder in missing_folders)]
+            )
+            raise RuntimeError(f"{source.repository} {tag} did not contain configured paths: {missing}")
 
         if destination.exists():
             shutil.rmtree(destination)
         shutil.move(str(temporary_destination), destination)
 
-    print(f"Hydrated {sum(files_written.values())} files from {source.repository} {tag} into {destination}")
+    print(
+        f"Hydrated {sum(files_written.values()) + sum(folders_written.values())} files "
+        f"from {source.repository} {tag} into {destination}"
+    )
 
 
 def parse_args() -> argparse.Namespace:

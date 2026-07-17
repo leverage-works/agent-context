@@ -34,7 +34,7 @@ apm run hydrate-cached-docs
 
 ## Manifest Format
 
-Use stable source IDs across all installed skills. The hydrator resolves `version: latest` to a concrete release tag and writes output under `.agent-cache/tool-docs/<id>/<tag>/`.
+Use stable source IDs across all installed skills. The hydrator resolves `version: latest` to a concrete release tag and writes output under `.agent-cache/tool-docs/<id>/<tag-or-commit>/`.
 
 ```yaml
 cached_docs:
@@ -48,4 +48,19 @@ cached_docs:
         destination: docs
 ```
 
-Use one `folders` entry for each release subfolder the skill needs. `source` is relative to the archive root and `destination` is relative to the cache entry.
+For upstreams without releases, use `github-archive-http` with an immutable 40-character commit SHA:
+
+```yaml
+cached_docs:
+  - id: example-source
+    strategy:
+      type: github-archive-http
+      repository: owner/repository
+      ref: 0123456789abcdef0123456789abcdef01234567
+    files:
+      - source: README.md
+    folders:
+      - source: docs
+```
+
+Use `files` for individual archive files and `folders` for directories. `source` is relative to the archive root and `destination` is relative to the versioned cache entry.
