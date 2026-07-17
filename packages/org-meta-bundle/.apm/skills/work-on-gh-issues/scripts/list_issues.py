@@ -17,6 +17,7 @@ from typing import Any
 
 
 ISSUE_FIELDS = "number,title,author,createdAt,labels,url"
+RENOVATE_DEPENDENCY_DASHBOARD_LABEL = "renovate-dependency-dashboard"
 GITHUB_REMOTE = re.compile(
     r"(?:github\.com[:/])(?P<owner>[^/\s]+)/(?P<repository>[^/\s]+?)(?:\.git)?/?$"
 )
@@ -85,7 +86,19 @@ def fetch_issues(repository: str, issue_number: int | None, state: str, limit: i
     result = json.loads(output)
     if not isinstance(result, list):
         raise RuntimeError("GitHub returned an unexpected issue-list response")
-    return result
+    return [issue for issue in result if not has_renovate_dependency_dashboard_label(issue)]
+
+
+def has_renovate_dependency_dashboard_label(issue: dict[str, Any]) -> bool:
+    """Return whether an issue has Renovate's dedicated dashboard label."""
+    issue_labels = issue.get("labels", [])
+    if not isinstance(issue_labels, list):
+        return False
+    return any(
+        isinstance(label, dict)
+        and one_line(label.get("name")).casefold() == RENOVATE_DEPENDENCY_DASHBOARD_LABEL
+        for label in issue_labels
+    )
 
 
 def one_line(value: object) -> str:
