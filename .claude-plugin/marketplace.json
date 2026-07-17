@@ -1,23 +1,21 @@
 {
   "name": "agent-context",
-  "interface": {
-    "displayName": "agent-context"
+  "owner": {
+    "name": "personal-leverage",
+    "url": "https://github.com/personal-leverage"
   },
   "plugins": [
     {
       "name": "org-meta-bundle",
+      "description": "Organization-wide Codex workflows for APM and cached documentation.",
+      "version": "0.2.0",
       "source": {
         "source": "git-subdir",
         "url": "personal-leverage/agent-context",
         "path": "packages/org-meta-bundle",
         "ref": "v0.2.0",
         "sha": "bdf3afd956865f0375a5c6d7621810021a078042"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
+      }
     }
   ]
 }
