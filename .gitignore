@@ -4,3 +4,7 @@
 /AGENTS.md
 /apm_modules/
 /build/
+
+
+# APM dependencies
+apm_modules/

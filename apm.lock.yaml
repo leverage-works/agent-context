@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-11T22:05:42.945330+00:00'
+generated_at: '2026-07-17T13:05:34.722037+00:00'
 apm_version: 0.24.1
 dependencies:
 - repo_url: _local/org-meta-bundle
@@ -7,17 +7,25 @@ dependencies:
   version: 0.1.0
   package_type: apm_package
   deployed_files:
+  - .agents/skills/collaborate-cross-repos
+  - .agents/skills/collaborate-cross-repos/SKILL.md
   - .agents/skills/use-apm
   - .agents/skills/use-apm/SKILL.md
   - .agents/skills/use-cached-docs
   - .agents/skills/use-cached-docs/SKILL.md
   - .agents/skills/use-cached-docs/cached-docs.yml
   - .agents/skills/use-cached-docs/scripts/hydrate_cached_docs.py
+  - .agents/skills/work-on-gh-issues
+  - .agents/skills/work-on-gh-issues/SKILL.md
+  - .agents/skills/work-on-gh-issues/scripts/list_issues.py
   deployed_file_hashes:
-    .agents/skills/use-apm/SKILL.md: sha256:2007d2bd4acf81babd0d2bd8ade8d1df71e134e7c397f533fc315b98920db1fb
-    .agents/skills/use-cached-docs/SKILL.md: sha256:39ae255118c1c696058dadc64ce47bd620b0d21a1c8d047ee13c3fde5ecf002b
-    .agents/skills/use-cached-docs/cached-docs.yml: sha256:e1aab69c54ef910859fc1f40dcff274b989a02675b7732a63bc56285a8c06cc6
-    .agents/skills/use-cached-docs/scripts/hydrate_cached_docs.py: sha256:603663f4017ba6ce0d6a80057904bcdd83d6ca724f17d0c515af1412c4a2f5ad
+    .agents/skills/collaborate-cross-repos/SKILL.md: sha256:6700356e172773dfeff3a15f54dd9d3c94a1e2222a7cb67d77a2fac2edc86563
+    .agents/skills/use-apm/SKILL.md: sha256:4d6f0e2ba5a004249d40420b015db2a6e675dd933cd41aa41c181840847433da
+    .agents/skills/use-cached-docs/SKILL.md: sha256:adfa60831604ee4e90270eceaf1c2af3d5cd39c8c4723388c99c756308d599bb
+    .agents/skills/use-cached-docs/cached-docs.yml: sha256:919a4ba9cd6d392dfbac636d4cd63fe51e86194c54d2e21ca8df40773cc782f3
+    .agents/skills/use-cached-docs/scripts/hydrate_cached_docs.py: sha256:d1e158d2bb1f973958dade28dce6abd943df169700e57828850045f821efd8a0
+    .agents/skills/work-on-gh-issues/SKILL.md: sha256:87bc7efa52cfd123fbfe95e0b0edc8cbdbc7455a6d6e0e34e2acd332efea9f0a
+    .agents/skills/work-on-gh-issues/scripts/list_issues.py: sha256:b752a41987b9745e5ad8cb842dc37158c0e39c4c05bbbaa0bc63626c99bf1764
   source: local
   local_path: ./packages/org-meta-bundle
   is_dev: true
