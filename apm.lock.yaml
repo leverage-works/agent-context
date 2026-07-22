@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-17T14:13:55.892764+00:00'
+generated_at: '2026-07-22T21:01:36.243953+00:00'
 apm_version: 0.24.1
 dependencies:
 - repo_url: _local/org-meta-bundle
@@ -24,7 +24,7 @@ dependencies:
     .agents/skills/use-cached-docs/SKILL.md: sha256:adfa60831604ee4e90270eceaf1c2af3d5cd39c8c4723388c99c756308d599bb
     .agents/skills/use-cached-docs/cached-docs.yml: sha256:919a4ba9cd6d392dfbac636d4cd63fe51e86194c54d2e21ca8df40773cc782f3
     .agents/skills/use-cached-docs/scripts/hydrate_cached_docs.py: sha256:d1e158d2bb1f973958dade28dce6abd943df169700e57828850045f821efd8a0
-    .agents/skills/work-on-gh-issues/SKILL.md: sha256:81935d565b982117c104c31cc6549efeac7b5cd8334d7599cdf2fb3e599b7990
+    .agents/skills/work-on-gh-issues/SKILL.md: sha256:5ca4ae82b103cb227d98e2e2f0d1f20940061863cfa6fbbf98500dea7f804f5f
     .agents/skills/work-on-gh-issues/scripts/list_issues.py: sha256:209a25da96cb36d47b51334ba22338701085324f1d834ce82d56aa015e86c725
   source: local
   local_path: ./packages/org-meta-bundle

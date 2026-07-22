@@ -37,8 +37,14 @@ list size is insufficient.
 ## Pickup Workflow
 
 1. Run the helper before beginning issue-driven work.
-2. Select an issue from its table, or use its number directly.
-3. Mark the issue as taken immediately by assigning it to the authenticated
+2. If the user supplied an issue number, use that issue directly. If they did
+   not supply one, triage the listed issues and recommend the most
+   straightforward issue to pick up, with a brief reason based on its apparent
+   scope, labels, assignee, and recent discussion. Do **not** autonomously
+   select an issue, assign it, begin implementation, or otherwise treat it as
+   picked up; wait for the user to choose an issue explicitly.
+3. Once the user has explicitly chosen an issue, mark it as taken immediately
+   by assigning it to the authenticated
    operator:
 
    ```sh
@@ -53,26 +59,6 @@ list size is insufficient.
 5. Implement and verify the requested work in the current repository.
 6. When communicating in another repository, use `collaborate-cross-repos`.
    Keep all GitHub identity conventions from that skill.
-
-## Commit Linkage
-
-When suggesting a commit message for work that addresses an issue, always
-reference that issue. If the commit fully solves it, use GitHub's closing
-keyword syntax so merging the commit into the default branch closes the issue:
-
-```text
-Fix parser fallback (Fixes #42)
-```
-
-For an issue in another repository, use its full repository reference:
-
-```text
-Fix shared parser fallback (Fixes owner/repository#42)
-```
-
-Use a closing keyword only when the commit resolves the issue; otherwise use a
-plain reference such as `(#42)`. Supported closing keywords include `close`,
-`fix`, and `resolve` (and their common inflections).
 
 ## Requirements and Boundaries
 

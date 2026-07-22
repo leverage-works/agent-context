@@ -25,3 +25,7 @@ not create a commit with a plain-English subject that omits the commit type.
 After completing a coherent piece of work, suggest a suitable Conventional
 Commit message and wait for human review before creating the commit, unless a
 human explicitly asks you to commit.
+
+Put each suggested subject alone in a single-line `text` code block. For issue
+work, include `(#<number>)`, or `Fixes #<number>` only when it fully resolves
+the issue; use `owner/repository#<number>` for another repository.
