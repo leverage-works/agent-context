@@ -1,5 +1,6 @@
 ---
 description: Require Conventional Commit messages for every Git commit.
+applyTo: "**"
 ---
 
 # Git Commit Messages

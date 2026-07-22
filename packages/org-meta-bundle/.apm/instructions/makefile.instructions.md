@@ -1,5 +1,6 @@
 ---
 description: Use the repository Makefile as the discoverable catalogue of supported actions.
+applyTo: "**"
 ---
 
 # Repository Actions
