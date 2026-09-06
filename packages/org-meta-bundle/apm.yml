@@ -1,7 +1,7 @@
 name: org-meta-bundle
 version: 0.2.1
 description: Organization-wide Codex workflows for APM, cached documentation, and GitHub collaboration.
-author: personal-leverage
+author: leverage-works
 targets:
   - codex
 includes: auto

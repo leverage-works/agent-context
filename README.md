@@ -1,6 +1,6 @@
 # agent-context
 
-Codex-first APM packages for the personal-leverage organization.
+Codex-first APM packages for the leverage-works organization.
 
 ## Onboard a Codex Workspace
 
@@ -36,7 +36,7 @@ organization workflows.
 3. Install the organization bundle directly from this repository:
 
    ```sh
-   apm install personal-leverage/agent-context/packages/org-meta-bundle --target codex
+   apm install leverage-works/agent-context/packages/org-meta-bundle --target codex
    apm compile --target codex
    ```
 

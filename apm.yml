@@ -1,7 +1,7 @@
 name: agent-context
 version: 0.2.1
-description: Codex-first APM packages for personal-leverage.
-author: personal-leverage
+description: Codex-first APM packages for leverage-works.
+author: leverage-works
 license: UNLICENSED
 targets:
   - codex
@@ -13,8 +13,8 @@ scripts:
 
 marketplace:
   owner:
-    name: personal-leverage
-    url: https://github.com/personal-leverage
+    name: leverage-works
+    url: https://github.com/leverage-works
   outputs:
     claude: {}
     codex: {}
@@ -22,7 +22,7 @@ marketplace:
     strategy: lockstep
   packages:
     - name: org-meta-bundle
-      source: personal-leverage/agent-context
+      source: leverage-works/agent-context
       subdir: packages/org-meta-bundle
       version: 0.2.1
       category: Productivity

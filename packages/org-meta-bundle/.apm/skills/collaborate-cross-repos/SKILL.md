@@ -15,7 +15,7 @@ itself.
 Before writing, identify the repository on whose behalf you are communicating:
 
 1. Prefer the current checkout's `origin` repository and use its repository
-   name (for example, `payments` from `personal-leverage/payments`).
+   name (for example, `payments` from `leverage-works/payments`).
 2. If the checkout has no unambiguous origin, use the repository name
    explicitly named by the task.
 3. If neither establishes a repository, stop and ask the user; do not guess or

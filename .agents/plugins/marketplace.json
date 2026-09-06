@@ -8,7 +8,7 @@
       "name": "org-meta-bundle",
       "source": {
         "source": "git-subdir",
-        "url": "personal-leverage/agent-context",
+        "url": "leverage-works/agent-context",
         "path": "packages/org-meta-bundle",
         "ref": "v0.2.0",
         "sha": "bdf3afd956865f0375a5c6d7621810021a078042"
