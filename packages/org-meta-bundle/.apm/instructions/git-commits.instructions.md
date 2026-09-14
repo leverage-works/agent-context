@@ -9,8 +9,13 @@ Every Git commit created in this repository MUST use a Conventional Commits
 subject:
 
 ```text
-<type>(<optional scope>): <description>
+<type>(<optional scope>)[optional !]: <description>
 ```
+
+Use `feat` for new functionality, `fix` for corrections, and `perf` for
+performance improvements. Mark incompatible changes with `!` before the colon
+and explain the migration in a `BREAKING CHANGE:` footer. Follow the shared
+release policy when classifying consumer-facing changes.
 
 Every commit message MUST include a body, separated from the subject by a blank
 line. Summarise what changed and why, with enough context for someone reading

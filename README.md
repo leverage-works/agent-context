@@ -33,10 +33,11 @@ organization workflows.
    apm init --yes --target codex
    ```
 
-3. Install the organization bundle directly from this repository:
+3. Install an explicitly versioned organization bundle. The example uses the
+   existing `v0.2.0` release; select the published release you want to adopt:
 
    ```sh
-   apm install leverage-works/agent-context/packages/org-meta-bundle --target codex
+   apm install leverage-works/agent-context/packages/org-meta-bundle#v0.2.0 --target codex
    apm compile --target codex
    ```
 
@@ -138,6 +139,23 @@ environment's dependencies so intended tests run without ambient packages or
 missing-dependency skips. Existing project-managed suites retain their own
 environment conventions.
 
+## Releases and Dependency Updates
+
+Use Conventional Commits and Semantic Versioning for released artifacts. This
+repository follows CypherDown's automatic release model: eligible commits on
+`main` produce a tested, immutable release with synchronized package metadata.
+Skills and instructions are shipped functionality, so classify their changes by
+consumer impact rather than automatically using `docs` for Markdown.
+
+See [release operations and organization rollout](docs/releases.md) for version
+rules, preview commands, recovery, and repository setup requirements. The shared
+bundle carries release and APM update guidance. Each organization owns its
+Renovate configuration and consumer hook installation.
+
+Renovate updates pinned APM versions and their lockfile together. When a pull
+brings changes to either dependency file, local merge/rebase hooks should remind
+you to run `make apm-install`. The reminder performs no upstream check or update.
+
 ## Structure
 
 - `packages/` contains independently versioned APM packages.
@@ -157,9 +175,11 @@ apm run hydrate-cached-docs
 Use `make apm-update` to refresh APM dependencies before recompiling the
 Codex instructions. `make` lists the supported repository actions.
 
-Build the Codex marketplace artifact from the repository root:
+After a release tag exists remotely, preview and build APM marketplace artifacts
+from the repository root (the release workflow validates local metadata before
+the new tag exists):
 
 ```sh
 apm pack --check-versions --dry-run
-apm pack
+apm pack --marketplace-path claude=build/claude-marketplace.json --marketplace-path codex=build/codex-marketplace.json
 ```
