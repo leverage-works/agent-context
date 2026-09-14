@@ -8,12 +8,12 @@
     {
       "name": "org-meta-bundle",
       "description": "Organization-wide Codex workflows for APM, cached documentation, and GitHub collaboration.",
-      "version": "0.3.1",
+      "version": "0.4.0",
       "source": {
         "source": "git-subdir",
         "url": "leverage-works/agent-context",
         "path": "packages/org-meta-bundle",
-        "ref": "v0.3.1"
+        "ref": "v0.4.0"
       }
     }
   ]

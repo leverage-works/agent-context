@@ -1,10 +1,10 @@
 lockfile_version: '1'
-generated_at: '2026-09-14T22:58:01.839915+00:00'
+generated_at: '2026-09-14T23:27:33.995150+00:00'
 apm_version: 0.30.0
 dependencies:
 - repo_url: _local/org-meta-bundle
   name: org-meta-bundle
-  version: 0.3.1
+  version: 0.4.0
   package_type: apm_package
   deployed_files:
   - .agents/skills/collaborate-cross-repos
@@ -25,10 +25,10 @@ dependencies:
     .agents/skills/use-apm/SKILL.md: sha256:4d6f0e2ba5a004249d40420b015db2a6e675dd933cd41aa41c181840847433da
     .agents/skills/use-cached-docs/SKILL.md: sha256:adfa60831604ee4e90270eceaf1c2af3d5cd39c8c4723388c99c756308d599bb
     .agents/skills/use-cached-docs/cached-docs.yml: sha256:919a4ba9cd6d392dfbac636d4cd63fe51e86194c54d2e21ca8df40773cc782f3
-    .agents/skills/use-cached-docs/scripts/__pycache__/hydrate_cached_docs.cpython-312.pyc: sha256:d7d62613656fb3e218702fbdc0c5f688ccfdd475275c3f86e9ebbe11ea9d534c
+    .agents/skills/use-cached-docs/scripts/__pycache__/hydrate_cached_docs.cpython-312.pyc: sha256:e28c2bce8f282d60e2be6a2404f89358a2381428b66e38c59e848de9d68d972b
     .agents/skills/use-cached-docs/scripts/hydrate_cached_docs.py: sha256:d1e158d2bb1f973958dade28dce6abd943df169700e57828850045f821efd8a0
     .agents/skills/work-on-gh-issues/SKILL.md: sha256:5ca4ae82b103cb227d98e2e2f0d1f20940061863cfa6fbbf98500dea7f804f5f
-    .agents/skills/work-on-gh-issues/scripts/__pycache__/list_issues.cpython-312.pyc: sha256:7999be75b3c69dd03be53f86c536e578244a2fca91587dc07d2e71a38759e5c5
+    .agents/skills/work-on-gh-issues/scripts/__pycache__/list_issues.cpython-312.pyc: sha256:d00c478fdd5a81f871ec965eca5c5400a2ba6925167339d1d005e79524dfb48b
     .agents/skills/work-on-gh-issues/scripts/list_issues.py: sha256:209a25da96cb36d47b51334ba22338701085324f1d834ce82d56aa015e86c725
   source: local
   local_path: ./packages/org-meta-bundle
@@ -106,7 +106,7 @@ deployments:
   owners:
   - ./packages/org-meta-bundle
   active_owner: ./packages/org-meta-bundle
-  content_hash: sha256:d7d62613656fb3e218702fbdc0c5f688ccfdd475275c3f86e9ebbe11ea9d534c
+  content_hash: sha256:e28c2bce8f282d60e2be6a2404f89358a2381428b66e38c59e848de9d68d972b
 - kind: project-relative
   target: codex
   value: .agents/skills/use-cached-docs/scripts/hydrate_cached_docs.py
@@ -142,7 +142,7 @@ deployments:
   owners:
   - ./packages/org-meta-bundle
   active_owner: ./packages/org-meta-bundle
-  content_hash: sha256:7999be75b3c69dd03be53f86c536e578244a2fca91587dc07d2e71a38759e5c5
+  content_hash: sha256:d00c478fdd5a81f871ec965eca5c5400a2ba6925167339d1d005e79524dfb48b
 - kind: project-relative
   target: codex
   value: .agents/skills/work-on-gh-issues/scripts/list_issues.py
