@@ -2,7 +2,7 @@ name: agent-context
 version: 0.3.0
 description: Codex-first APM packages for leverage-works.
 author: leverage-works
-license: UNLICENSED
+license: MIT
 targets:
   - codex
 devDependencies:

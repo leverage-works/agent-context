@@ -183,3 +183,8 @@ the new tag exists):
 apm pack --check-versions --dry-run
 apm pack --marketplace-path claude=build/claude-marketplace.json --marketplace-path codex=build/codex-marketplace.json
 ```
+
+## Licence
+
+The scripts and guidance in this repository are available under the
+[MIT licence](LICENCE).
