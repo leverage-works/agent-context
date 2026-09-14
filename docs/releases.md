@@ -85,11 +85,34 @@ local.
 
 ## Organization rollout
 
-Each organization owns its Renovate configuration, credentials, runner, schedules,
-PR grouping and merge policy. Enable the APM manager in a Renovate version that
-supports it and provide APM on its runner so manifest and lockfile updates land
+Start repository dependency onboarding with the shared
+[`leverage-works/renovate-config`](https://github.com/leverage-works/renovate-config)
+preset. If an organization has published its own preset, projects should extend
+that preset, which can extend the shared baseline and add organization policy.
+Otherwise, use the baseline directly:
+
+```json
+{
+  "extends": ["github>leverage-works/renovate-config"]
+}
+```
+
+Merge this into existing repository configuration, preserving project exceptions.
+The public preset supplies shared rules without cross-organization credentials.
+Unpinned presets follow their default branch on each run. Pin only to a published
+tag when a versioned rollout is needed.
+
+Each organization still owns its runner, credentials, repository selection,
+schedules, and merge policy. Adding `extends` does not start Renovate. Onboard the
+repo into its organization's runner and validate a real dependency update PR.
+Keep these configuration repositories independent of APM and agent-context: they
+must not install this bundle or require APM to validate their presets. APM grouping
+rules are configuration, not a package dependency.
+
+For APM consumers, use a Renovate version with APM manager support and provide the
+APM CLI inside its execution environment so manifest and lockfile updates land
 together. Pin consuming repos to a published tag, for example
-`leverage-works/agent-context/packages/org-meta-bundle#v0.2.0`; choose the released
+`leverage-works/agent-context/packages/org-meta-bundle#v0.3.1`; choose the released
 version containing the guidance you need. Untagged dependencies are skipped by
 Renovate. Local `path:` packages keep their repository lifecycle.
 

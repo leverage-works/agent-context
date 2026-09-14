@@ -49,6 +49,33 @@ organization workflows.
    reads the installed skills and generated `AGENTS.md` instructions when the
    session starts.
 
+## Onboard Dependency Updates
+
+Inspect existing Renovate configuration and runner setup. Projects should extend
+their organization's published preset; when none exists, add this baseline to
+`renovate.json`:
+
+```json
+{
+  "extends": ["github>leverage-works/renovate-config"]
+}
+```
+
+The public [shared preset](https://github.com/leverage-works/renovate-config)
+centralizes dependency rules. Organization presets add local policy, and project
+configs retain exceptions. An unpinned preset follows its default branch on each
+run; use a published tag when a versioned rollout is needed.
+
+A preset does not run Renovate. The organization must onboard the project into a
+runner with suitable repository access and verify an update PR. APM consumers
+also need the APM CLI in that runner to refresh `apm.lock.yaml` alongside version
+pins. Renovate config repositories themselves remain independent of APM: no APM
+manifest, installation, or dependency on agent-context.
+
+See [organization rollout](docs/releases.md#organization-rollout) for runner
+responsibilities and the local post-pull reminder. Installing this bundle does
+not install Renovate configuration or Git hooks.
+
 ## Makefile Convention
 
 Every repository should use its `Makefile` as the discoverable catalogue of
