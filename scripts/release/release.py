@@ -56,7 +56,7 @@ def bump_type(changes: list[dict]) -> str | None:
 
 
 def notes(version: str, changes: list[dict]) -> str:
-    lines = [f"# agent-context {version}", ""]
+    lines = [f"# v{version}", ""]
     for change in reversed(changes):
         if RELEASE.fullmatch(change["subject"]):
             continue
@@ -194,7 +194,7 @@ def publish(repo: str, version: str, commit: str, notes_path: Path) -> None:
         return
     if not release:
         gh("release", "create", tag, "--repo", repo, "--verify-tag", "--draft",
-           "--title", f"agent-context {version}", "--notes-file", str(notes_path))
+           "--title", tag, "--notes-file", str(notes_path))
     gh("release", "edit", tag, "--repo", repo, "--notes-file", str(notes_path), "--draft=false", "--latest")
 
 

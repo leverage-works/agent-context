@@ -56,4 +56,22 @@ Commit message and wait for human review before creating the commit, unless a
 human explicitly asks you to commit.
 
 When suggesting a commit message for review, show the complete subject, body,
-and any issue footer together in one `text` code block.
+and any issue footer together in one top-level `text` code block. Do not indent
+the block or nest it inside a list or quotation. Put these exact lowercase
+separator lines outside the block, with a blank line between each separator
+and the block:
+
+--- suggested commit message ---
+
+```text
+fix: correct test path
+
+Resolve fixture paths relative to the test file so the suite can run from
+any working directory.
+```
+
+--- end of message ---
+
+Put any explanation or verification notes before the suggested message. End
+the response with the closing separator so the copyable message stays clearly
+separated from commentary.
